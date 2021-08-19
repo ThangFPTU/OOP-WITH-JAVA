@@ -64,7 +64,6 @@ public class Student implements Comparable<Student> {
 
     public int getCourse() {
         return course;
-
     }
 
     public void setCourse(int course) {

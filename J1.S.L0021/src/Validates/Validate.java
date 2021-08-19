@@ -5,6 +5,7 @@
  */
 package Validates;
 
+import Model.Report;
 import Model.Student;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -72,6 +73,40 @@ public class Validate {
         return false;
     }
     
+    public boolean checkId(ArrayList<Student> ls, String id,
+            String studentName) {
+        int size = ls.size();
+        for (Student student : ls) {
+            if (id.equalsIgnoreCase(student.getId())) {
+                if(!student.getName().toUpperCase().equalsIgnoreCase(studentName.toUpperCase())){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    public static boolean checkAmountOfStudent(ArrayList<Student> stu, int amount)
+    {
+        int count = 0;
+        ArrayList<Student> newStu = new ArrayList<>();
+        for(Student student : stu){
+            int key = 0;
+            for(Student stuInNew : newStu)
+                if(student.getId().equalsIgnoreCase(stuInNew.getId())){
+                    key = 1;
+                    break;
+                }
+            if(key == 0){
+                count++;
+                newStu.add(student);
+            }
+        }
+        System.out.println(count);
+        return (count >= amount) ? true : false;
+        
+    }
+    
 
     public boolean checkYesNo(String choice) {
         if (choice.toUpperCase().equals("Y")) {
@@ -79,6 +114,16 @@ public class Validate {
         } else {
             return false;
         }
+    }
+    
+    public static boolean checkReportExist(ArrayList<Report> lr,String id,String course) {
+        for (Report report : lr) {
+            if(id.equalsIgnoreCase(report.getId())
+                    && report.getCourseName().equalsIgnoreCase(course)){
+                return true;
+            }
+        }
+        return false;
     }
 
 }
