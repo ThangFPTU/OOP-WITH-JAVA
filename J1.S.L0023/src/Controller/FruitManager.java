@@ -21,12 +21,13 @@ public class FruitManager {
     private ArrayList<Fruit> listItems;
     private Hashtable<String, Order> listOrder = new Hashtable<>();
 
-    public FruitManager(){
+    public FruitManager() {
         listFruits.add(new Fruit(1, "Apple", 20, 4, "Thailand"));
         listFruits.add(new Fruit(2, "Coconut", 20, 2, "Vietnam"));
         listFruits.add(new Fruit(3, "Orange", 20, 3, "US"));
         listFruits.add(new Fruit(4, "Grape", 20, 6, "France"));
     }
+
     public ArrayList<Fruit> getListFruits() {
         return listFruits;
     }
@@ -42,9 +43,7 @@ public class FruitManager {
     public void setListItems(ArrayList<Fruit> listItems) {
         this.listItems = listItems;
     }
-    
-    
-    
+
     public Fruit getExistedFruitByID(int Id) {
         for (Fruit fruit : listFruits) {
             if (fruit.getId() == Id) {
@@ -58,41 +57,43 @@ public class FruitManager {
         listFruits.add(new Fruit(id, name, quantity, price, origin));
     }
 
-    public void addItem(Fruit item) {
-        listItems.add(item);
-    }
-
-    public void updateItem(int id, int quantity) {
-        for (Fruit item : listItems) {
-            if (item.getId() == id) {
-                item.setQuantity(quantity);
-                return;
+    public void addItem(Fruit fruit) {
+        Validate validate = new Validate();
+        //Check fruit exist in cart
+        if (!validate.isExistedFruitId(listItems, fruit.getId())) {
+            listItems.add(fruit);
+        } else {
+            for (Fruit item : listItems) {
+                //Check id
+                if (item.getId() == fruit.getId()) {
+                    item.setQuantity(fruit.getQuantity()+item.getQuantity());
+                    return;
+                }
             }
         }
     }
 
     public void addOrder(String name) {
-        listOrder.put(name, new Order(listItems));
-    }
-
-    public void updateOrder(String name) {
-        System.out.println("Name : " + name);
         Validate validate = new Validate();
-        for (Fruit shoppingItem : listItems) {
-            if (validate.isExistedFruitId(listOrder.get(name).getListItems(), shoppingItem.getId())) {
-                for (Fruit orderItem : listOrder.get(name).getListItems()) {
-                    if (orderItem.getId() == shoppingItem.getId()) {
-                        orderItem.setQuantity(shoppingItem.getQuantity());
-                        break;
+        //Check exist fruit in cart
+        if (listOrder.containsKey(name)) {
+            for (Fruit shoppingItem : listItems) {
+                //Check exist customer order
+                if (validate.isExistedFruitId(listOrder.get(name).getListItems(), shoppingItem.getId())) {
+                    for (Fruit orderItem : listOrder.get(name).getListItems()) {
+                        //Check id
+                        if (orderItem.getId() == shoppingItem.getId()) {
+                            orderItem.setQuantity(shoppingItem.getQuantity());
+                            break;
+                        }
                     }
+                } else {
+                    listOrder.get(name).getListItems().add(shoppingItem);
                 }
-            } else {
-                listOrder.get(name).getListItems().add(shoppingItem);
             }
+        } else {
+            listOrder.put(name, new Order(listItems));
         }
-    }
-    public static void main(String[] args) {
-       
     }
 
 }

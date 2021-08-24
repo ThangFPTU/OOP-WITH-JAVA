@@ -18,8 +18,8 @@ import java.util.Hashtable;
  */
 public class FruitShopView {
 
-    
-private FruitManager control = new FruitManager();
+    private FruitManager control = new FruitManager();
+
     public void MenuView() {
         Validate validate = new Validate();
         while (true) {
@@ -68,22 +68,27 @@ private FruitManager control = new FruitManager();
                     }
                     System.out.println("");
                     return;
-                }else{
+                } else {
                     System.out.println("");
                 }
             }
             int id = validate.inputIntLimit("Enter ID: ", "Id must be a number and greater than 0!",
                     0, Integer.MAX_VALUE);
             //Check if ID exist then only enter Quantity
+
             String name = "", origin = "";
             float price = 0;
             int amount = 0;
+
+            //Check exist id in list fruit created
             if (validate.isExistedFruitId(control.getListFruits(), id)) {
                 System.out.println("Id has been exist!");
                 count++;
                 continue;
             }
             name = validate.inputString("Enter name: ", "Invalid Name", "[a-zA-z]+");
+
+            //Check exist fruit in list fruit created
             if (validate.isExistedFruitName(control.getListFruits(), name)) {
                 System.out.println("Fruit " + name + " has been created!");
                 count++;
@@ -100,7 +105,8 @@ private FruitManager control = new FruitManager();
     }
 
     public void ordersView() {
-        
+        System.out.println("-------- List Order --------\n");
+        //Check empty
         if (control.getListOrder().isEmpty()) {
             System.out.println("No information!\n");
             return;
@@ -109,6 +115,7 @@ private FruitManager control = new FruitManager();
             System.out.println("Customer: " + name);
             ArrayList<Fruit> orderList = control.getListOrder().get(name).getListItems();
             displayListOrder(orderList);
+            System.out.println("");
         }
         System.out.println("");
     }
@@ -116,11 +123,15 @@ private FruitManager control = new FruitManager();
     public void shoppingView() {
         Validate validate = new Validate();
         control.setListItems(new ArrayList<>());
+
+        // check empty list fruit created
         if (control.getListFruits().isEmpty()) {
             System.err.println("No information!\n");
             return;
         }
         System.out.println("\n-------- Shopping --------");
+
+        //Loop while user choose no
         while (true) {
             System.out.printf("|%-10s|%-18s|%-14s|%-13s|\n", " ++ Item ++ ",
                     " ++ Fruit name ++ ", " ++ Origin ++ ", " ++ Price ++");
@@ -140,17 +151,13 @@ private FruitManager control = new FruitManager();
             System.out.println("You selected: " + selectedFruit.getName());
             int quantity = validate.inputIntLimit("Enter quantity: ", "Quantity is digit and less than quantity available!",
                     1, selectedFruit.getQuantity());
-            //Check item exist in order or not
-            if (!validate.isExistedFruitId(control.getListItems(), selectedFruit.getId())) {
-                control.addItem(new Fruit(selectedFruit.getId(), selectedFruit.getName(),
-                        quantity, selectedFruit.getPrice(),selectedFruit.getOrigin()));
-                System.out.println("Add to cart successfull!");
-            } else {
-                control.updateItem(selectedFruit.getId(), quantity);
-                System.out.println("Update successful!");
-            }
+            control.addItem(new Fruit(selectedFruit.getId(), selectedFruit.getName(),
+                    quantity, selectedFruit.getPrice(), selectedFruit.getOrigin()));
+            System.out.println("Add successful!");
             String choice = validate.inputString("Do you want to order now (Y/N)? ",
                     "Please choose Y/N!", "[yYnN]");
+
+            //Check yes no input
             if (!validate.checkYesNo(choice)) {
                 break;
             }
@@ -158,12 +165,8 @@ private FruitManager control = new FruitManager();
 
         displayListOrder(control.getListItems());
         String name = validate.inputString("Enter name: ", "Invalid name!", "[a-zA-Z ]+");
-        if (control.getListOrder().containsKey(name)) {
-            control.updateOrder(name);
-        } else {
-            control.addOrder(name);
-        }
-        System.err.println("Add successfull!");
+        control.addOrder(name);
+        System.err.println("Order successfull!");
         System.out.println("");
     }
 
@@ -188,8 +191,5 @@ private FruitManager control = new FruitManager();
         FruitShopView view = new FruitShopView();
         view.MenuView();
     }
-
-
-
 
 }

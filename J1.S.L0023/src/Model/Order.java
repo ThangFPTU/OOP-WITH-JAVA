@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Admin
+ * @author hoang
  */
 public class Order {
     private ArrayList<Fruit> listItems;
